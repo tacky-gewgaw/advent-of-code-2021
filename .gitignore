@@ -76,3 +76,9 @@ package-lock.json
 src/test/rustdoc-gui/src/**.lock
 
 # Before adding new lines, see the comment at the top.
+
+# Added by cargo
+#
+# already existing elements were commented out
+
+#/target
