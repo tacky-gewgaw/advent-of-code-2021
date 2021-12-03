@@ -33,7 +33,7 @@ fn read_input(file: &str) -> Vec<Vec<u8>> {
 }
 
 fn gamma_rate_from(baa: Vec<Vec<u8>>) -> Vec<u8> {
-    let threshold: i32 = (baa.len() as f32 / 2.0).floor() as i32;
+    let threshold: i32 = (baa.len() as f32 / 2.0).ceil() as i32;
     let mut result_vec: Vec<i32> = Vec::new();
 
     for _i in 0..baa[0].len() {
@@ -42,7 +42,7 @@ fn gamma_rate_from(baa: Vec<Vec<u8>>) -> Vec<u8> {
 
     baa.iter().for_each(|ba| ba.iter().enumerate().for_each(|(i, v)| result_vec[i] += *v as i32));
 
-    let q = result_vec.iter().map(|i| (i > &threshold) as u8).collect::<Vec<u8>>();
+    let q = result_vec.iter().map(|i| (i >= &threshold) as u8).collect::<Vec<u8>>();
 
     println!("gr: {}", q.iter().map(|x| x.to_string()).collect::<Vec<String>>().join(""));
 
@@ -50,7 +50,7 @@ fn gamma_rate_from(baa: Vec<Vec<u8>>) -> Vec<u8> {
 }
 
 fn epsilon_rate_from(baa: Vec<Vec<u8>>) -> Vec<u8> {
-    let threshold: i32 = (baa.len() as f32 / 2.0).floor() as i32;
+    let threshold: i32 = (baa.len() as f32 / 2.0).ceil() as i32;
     let mut result_vec: Vec<i32> = Vec::new();
 
     for _i in 0..baa[0].len() {
@@ -59,18 +59,20 @@ fn epsilon_rate_from(baa: Vec<Vec<u8>>) -> Vec<u8> {
 
     baa.iter().for_each(|ba| ba.iter().enumerate().for_each(|(i, v)| result_vec[i] += *v as i32));
 
-    return result_vec.iter().map(|i| !(i > &threshold) as u8).collect::<Vec<u8>>();
+    return result_vec.iter().map(|i| !(i >= &threshold) as u8).collect::<Vec<u8>>();
 }
 
 fn find_ox_gen_rating(baa: Vec<Vec<u8>>) -> Vec<u8> {
     let mut res: Vec<Vec<u8>> = baa.to_vec();
 
-    let gr = gamma_rate_from(baa.to_vec()).to_vec();
-
     for i in 0..baa[0].len() {
+        let gr = gamma_rate_from(res.to_vec()).to_vec();
+
         let res1: Vec<Vec<u8>> = res.iter().filter(
             |ba| ba[i] == gr[i]
         ).cloned().collect();
+
+        println!("{:?}", res1);
 
         if res1.len() == 1 {
             return res1[0].to_vec();
@@ -85,11 +87,11 @@ fn find_ox_gen_rating(baa: Vec<Vec<u8>>) -> Vec<u8> {
 fn find_co2_scrub_rating(baa: Vec<Vec<u8>>) -> Vec<u8> {
     let mut res: Vec<Vec<u8>> = baa.to_vec();
 
-    let gr = epsilon_rate_from(baa.to_vec()).to_vec();
-
     for i in 0..baa[0].len() {
+        let er = epsilon_rate_from(res.to_vec()).to_vec();
+
         let res1: Vec<Vec<u8>> = res.iter().filter(
-            |ba| ba[i] == gr[i]
+            |ba| ba[i] == er[i]
         ).cloned().collect();
 
         if res1.len() == 1 {
