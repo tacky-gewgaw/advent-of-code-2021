@@ -1,19 +1,11 @@
 fn main() {
     let input = read_input(include_str!("input.txt"));
-    
-    let gamma_rate = gamma_rate_from(input.to_vec());
 
-    let epsilon_rate = epsilon_rate_from(input.to_vec());
-
-    let result = bin_to_dec(gamma_rate.to_vec()) * bin_to_dec(epsilon_rate.to_vec());
+    let result = bin_to_dec(gamma_rate_from(input.to_vec())) * bin_to_dec(epsilon_rate_from(input.to_vec()));
 
     println!("{}", result);
 
-    let csr = find_co2_scrub_rating(input.to_vec());
-
-    let ogr = find_ox_gen_rating(input.to_vec());
-
-    let lsr = bin_to_dec(csr.to_vec()) * bin_to_dec(ogr.to_vec());
+    let lsr = bin_to_dec(find_co2_scrub_rating(input.to_vec())) * bin_to_dec(find_ox_gen_rating(input.to_vec()));
 
     println!("{:?}", lsr)
 }
